@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Mother’s Day 💖</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #ffe6f2 0, #fdf5ff 40%, #f7e9ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4a2b3b;
+      perspective: 1200px;
+    }
+
+    /* Global floating hearts */
+    .floating-heart {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      background: #ff7aa2;
+      transform: rotate(45deg);
+      opacity: 0.7;
+      animation: floatUp 12s linear infinite;
+      z-index: 0;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    }
+    .floating-heart::before,
+    .floating-heart::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #ff7aa2;
+      border-radius: 50%;
+    }
+    .floating-heart::before { top: -9px; left: 0; }
+    .floating-heart::after { left: -9px; top: 0; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(45deg); opacity: 0; }
+      10% { opacity: 0.7; }
+      100% { transform: translateY(-120vh) rotate(45deg); opacity: 0; }
+    }
+
+    /* Main card */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+      padding: 28px 26px 30px;
+      border: 1px solid rgba(255, 192, 203, 0.9);
+      transform-style: preserve-3d;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.22);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #b57bb0;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #4a2b3b;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    }
+
+    .small-note {
+      font-size: 13px;
+      color: #8a6078;
+    }
+
+    /* Game area */
+    .game-area {
+      margin-top: 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #ffeaf4, #fff7ff);
+      border: 1px solid #f3c7e6;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+      transform-style: preserve-3d;
+    }
+
+    @media (max-width: 700px) {
+      .game-area {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .playfield-wrapper {
+      position: relative;
+      border-radius: 16px;
+      background: radial-gradient(circle at top left, #ffe0f0, #fbe9ff);
+      overflow: hidden;
+      border: 1px solid #f1c0e0;
+      min-height: 260px;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.6);
+      transform: translateZ(20px);
+    }
+
+    .playfield-title {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      font-size: 13px;
+      color: #8a6078;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px 10px;
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .playfield {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 40px 16px 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .playfield:hover {
+      transform: scale(1.02);
+    }
+
+    .heart {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: #ff5f8a;
+      transform: rotate(45deg);
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+      animation: floatHeart 3.5s ease-in-out infinite alternate;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: #ff5f8a;
+      border-radius: 50%;
+    }
+    .heart::before { top: -20px; left: 0; }
+    .heart::after { left: -20px; top: 0; }
+
+    @keyframes floatHeart {
+      0% { transform: rotate(45deg) translateY(0); }
+      100% { transform: rotate(45deg) translateY(-6px); }
+    }
+
+    .heart:hover {
+      transform: rotate(45deg) scale(1.1);
+    }
+
+    .heart.found {
+      animation: pop 0.4s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: rotate(45deg) scale(1); opacity: 1; }
+      60% { transform: rotate(45deg) scale(1.4); }
+      100% { transform: rotate(45deg) scale(0); opacity: 0; }
+    }
+
+    .message-bubble {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.98);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #6b3f5a;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .message-bubble.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transform: translateZ(30px);
+    }
+
+    .instructions {
+      font-size: 14px;
+      color: #6b3f5a;
+      line-height: 1.5;
+    }
+
+    .counter {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #b0577f;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      margin-top: 8px;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #f6d7ea;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff7aa2, #ffb3d1);
+      transition: width 0.25s ease;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #a06a8b;
+      margin-top: 6px;
+    }
+
+    .gift-box {
+      margin-top: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: 1px dashed #e0a5c8;
+      background: rgba(255, 255, 255, 0.96);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: default;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-style 0.2s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      transform: translateZ(40px);
+    }
+
+    .gift-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff7aa2, #ffb3d1);
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+    .gift-icon::before,
+    .gift-icon::after {
+      content: "";
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .gift-icon::before {
+      width: 6px;
+      height: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .gift-icon::after {
+      height: 6px;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .gift-text-main {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b3f5a;
+    }
+    .gift-text-sub {
+      font-size: 12px;
+      color: #a06a8b;
+    }
+
+    .gift-box.ready {
+      cursor: pointer;
+      border-style: solid;
+      animation: gentlePulse 1.4s ease-in-out infinite;
+    }
+
+    .gift-box.ready:hover {
+      transform: translateZ(40px) translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    @keyframes gentlePulse {
+      0% { transform: translateZ(40px) scale(1); box-shadow: 0 0 0 0 rgba(255, 122, 162, 0.4); }
+      70% { transform: translateZ(40px) scale(1.03); box-shadow: 0 0 0 12px rgba(255, 122, 162, 0); }
+      100% { transform: translateZ(40px) scale(1); box-shadow: 0 0 0 0 rgba(255, 122, 162, 0); }
+    }
+
+    /* Final overlay */
+    .final-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(255, 230, 242, 0.98), rgba(247, 217, 255, 0.98));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 10;
+    }
+    .final-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .final-card {
+      width: 90%;
+      max-width: 640px;
+      background: white;
+      border-radius: 26px;
+      padding: 26px 24px 24px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+      border: 1px solid #f3c7e6;
+      position: relative;
+      overflow: hidden;
+      transform: translateZ(60px);
+    }
+
+    .confetti {
+      position: absolute;
+      width: 6px;
+      height: 14px;
+      background: #ff7aa2;
+      top: -20px;
+      left: 50%;
+      opacity: 0;
+      animation: fall 1.6s linear forwards;
+    }
+    @keyframes fall {
+      0% { transform: translate(-50%, 0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-50%, 420px) rotate(260deg); opacity: 0; }
+    }
+
+    .final-title {
+      font-size: 26px;
+      margin-bottom: 6px;
+      color: #4a2b3b;
+    }
+    .final-subtitle {
+      font-size: 14px;
+      color: #a06a8b;
+      margin-bottom: 16px;
+    }
+    .final-message {
+      font-size: 15px;
+      color: #5b3248;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .final-sign {
+      font-size: 15px;
+      font-weight: 600;
+      color: #b0577f;
+      margin-bottom: 10px;
+    }
+
+    .coupon-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 6px;
+    }
+    .coupon {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px dashed #e0a5c8;
+      background: #fff5fb;
+      color: #7b4560;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .coupon:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+    }
+    .coupon:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .close-btn {
+      margin-top: 14px;
+      font-size: 13px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ff7aa2, #ffb3d1);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255, 122, 162, 0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .close-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(255, 122, 162, 0.5);
+    }
+    .close-btn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    /* POPUP WINDOWS */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,240,250,0.96);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .popup {
+      width: 90%;
+      max-width: 500px;
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid #f3c7e6;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      transform: translateY(20px) translateZ(80px);
+      animation: popupIn 0.25s ease forwards;
+    }
+
+    @keyframes popupIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96) translateZ(80px); }
+      to { opacity: 1; transform: translateY(0) scale(1) translateZ(80px); }
+    }
+
+    .popup h2 {
+      color: #4a2b3b;
+      margin-bottom: 10px;
+    }
+
+    .popup p {
+      color: #6b3f5a;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .popup button {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ff7aa2, #ffb3d1);
+      color: white;
+      cursor: pointer;
+      margin: 6px;
+      box-shadow: 0 6px 14px rgba(255,122,162,0.5);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .popup button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(255,122,162,0.6);
+    }
+    .popup button:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .popup-heart {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #ff7aa2;
+      transform: rotate(45deg);
+      opacity: 0.8;
+      animation: floatUp 10s linear infinite;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2));
+    }
+    .popup-heart::before,
+    .popup-heart::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #ff7aa2;
+      border-radius: 50%;
+    }
+    .popup-heart::before { top: -7px; left: 0; }
+    .popup-heart::after { left: -7px; top: 0; }
+
+    /* Extra hearts colors for option 3 (pink + purple + gold) */
+    .heart-pink { background: #ff7aa2; }
+    .heart-purple { background: #c77dff; }
+    .heart-gold { background: #ffd166; }
+    .heart-pink::before, .heart-pink::after { background: #ff7aa2; }
+    .heart-purple::before, .heart-purple::after { background: #c77dff; }
+    .heart-gold::before, .heart-gold::after { background: #ffd166; }
+
+  </style>
+</head>
+<body>
+
+  <!-- global floating background hearts -->
+  <div id="floating-container"></div>
+
+  <div class="card" id="card">
+    <div class="header">
+      <div class="subtitle">Mother’s Day 2026</div>
+      <h1>For My Amazing Mum 💐</h1>
+      <div class="small-note">Find all the hidden hearts to unlock your surprise.</div>
+    </div>
+
+    <div class="game-area">
+      <div class="playfield-wrapper">
+        <div class="playfield-title">Tap or click the hearts</div>
+        <div class="playfield" id="playfield">
+          <div class="message-bubble" id="messageBubble"></div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div>
+          <div class="instructions">
+            I’ve hidden <strong>5 little hearts</strong> in this card.<br />
+            Each one you find shows a message from me. When you’ve found them all, your special surprise will appear.
+          </div>
+          <div class="counter" id="counter">Hearts found: 0 / 5</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="hint">Hint: THANK YOU FOR BEING THE BEST MUM IN THE WORLD!</div>
+        </div>
+
+        <div class="gift-box" id="giftBox">
+          <div class="gift-icon"></div>
+          <div>
+            <div class="gift-text-main" id="giftMainText">Unlock the surprise</div>
+            <div class="gift-text-sub" id="giftSubText">Find all 5 hearts first ✨</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- final reveal -->
+  <div class="final-overlay" id="finalOverlay">
+    <div class="final-card">
+      <div class="final-title">Happy Mother’s Day, Mum 💖</div>
+      <div class="final-subtitle">Thank you for being my favourite person in the world.</div>
+      <div class="final-message">
+        I made this little game just for you, because you always make life interesting because of chores<br /><br />
+        Thank you for chores and love!🫡 .
+      </div>
+      <div class="final-sign">Whose special surprise do you want to see? 🥰</div>
+      <div class="coupon-row">
+        <div class="coupon" data-option="1">💗 Aisha</div>
+        <div class="coupon" data-option="2">🌸 Noumaan</div>
+        <div class="coupon" data-option="3">💕 Afnaan</div>
+        <div class="coupon" data-option="4">💐 Hugs from all of us!</div>
+      </div>
+      <button class="close-btn" id="closeBtn">Close</button>
+    </div>
+  </div>
+
+  <!-- POPUP SYSTEM -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup" id="popupBox">
+      <h2 id="popupTitle">Title</h2>
+      <p id="popupText">Message</p>
+      <button id="popupNext">Next</button>
+      <button id="popupClose">Close</button>
+    </div>
+  </div>
+
+  <script>
+    /* Global background hearts */
+    const floatingContainer = document.getElementById("floating-container");
+    for (let i = 0; i < 20; i++) {
+      const h = document.createElement("div");
+      h.className = "floating-heart";
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.bottom = "-40px";
+      h.style.animationDelay = Math.random() * 10 + "s";
+      h.style.animationDuration = 10 + Math.random() * 8 + "s";
+      floatingContainer.appendChild(h);
+    }
+
+    const playfield = document.getElementById("playfield");
+    const messageBubble = document.getElementById("messageBubble");
+    const counterEl = document.getElementById("counter");
+    const progressFill = document.getElementById("progressFill");
+    const giftBox = document.getElementById("giftBox");
+    const giftMainText = document.getElementById("giftMainText");
+    const giftSubText = document.getElementById("giftSubText");
+    const finalOverlay = document.getElementById("finalOverlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const card = document.getElementById("card");
+
+    const messages = [
+      "You always know how to give us work👌",
+      "Thank you for taking care of me, always 🌸",
+      "You are the reason I smile every day 🏡",
+      "We are so proud to be your child 💖",
+      "THANK YOU ╰(*°▽°*)╯"
+    ];
+
+    const totalHearts = messages.length;
+    let foundCount = 0;
+    let usedMessages = [];
+
+    function placeHearts() {
+      const rect = playfield.getBoundingClientRect();
+      const padding = 40;
+      for (let i = 0; i < totalHearts; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        const x = padding + Math.random() * (rect.width - padding * 2 - 40);
+        const y = padding + Math.random() * (rect.height - padding * 2 - 40);
+        heart.style.left = x + "px";
+        heart.style.top = y + "px";
+
+        heart.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (heart.classList.contains("found")) return;
+          heart.classList.add("found");
+          showMessage();
+          foundCount++;
+          updateProgress();
+          if (foundCount === totalHearts) {
+            unlockGift();
+          }
+        });
+
+        playfield.appendChild(heart);
+      }
+    }
+
+    function showMessage() {
+      let msg;
+      if (usedMessages.length === messages.length) {
+        msg = messages[messages.length - 1];
+      } else {
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * messages.length);
+        } while (usedMessages.includes(idx));
+        usedMessages.push(idx);
+        msg = messages[idx];
+      }
+      messageBubble.textContent = msg;
+      messageBubble.classList.add("show");
+      setTimeout(() => {
+        messageBubble.classList.remove("show");
+      }, 2200);
+    }
+
+    function updateProgress() {
+      counterEl.textContent = "Hearts found: " + foundCount + " / " + totalHearts;
+      const percent = (foundCount / totalHearts) * 100;
+      progressFill.style.width = percent + "%";
+    }
+
+    function unlockGift() {
+      giftBox.classList.add("ready");
+      giftMainText.textContent = "Your surprise is ready!";
+      giftSubText.textContent = "Tap the gift box to open it 🎁";
+    }
+
+    function launchConfetti() {
+      const cardEl = finalOverlay.querySelector(".final-card");
+      for (let i = 0; i < 40; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        const colors = ["#ff7aa2", "#ffb3d1", "#ffd166", "#9b5de5", "#f15bb5"];
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.left = 10 + Math.random() * 80 + "%";
+        c.style.animationDelay = Math.random() * 0.6 + "s";
+        cardEl.appendChild(c);
+        setTimeout(() => c.remove(), 2000);
+      }
+    }
+
+    /* Hearts in overlays (final + popup) */
+    function addOverlayHearts(container, count = 15) {
+      for (let i = 0; i < count; i++) {
+        const h = document.createElement("div");
+        h.className = "popup-heart";
+        const colorClass = ["heart-pink", "heart-purple", "heart-gold"][Math.floor(Math.random() * 3)];
+        h.classList.add(colorClass);
+        h.style.left = Math.random() * 100 + "%";
+        h.style.top = "110%";
+        h.style.animationDelay = Math.random() * 5 + "s";
+        h.style.animationDuration = 8 + Math.random() * 6 + "s";
+        container.appendChild(h);
+      }
+    }
+
+    function clearOverlayHearts(container) {
+      container.querySelectorAll(".popup-heart").forEach(h => h.remove());
+    }
+
+    giftBox.addEventListener("click", () => {
+      if (!giftBox.classList.contains("ready")) return;
+      clearOverlayHearts(finalOverlay);
+      addOverlayHearts(finalOverlay, 15);
+      finalOverlay.classList.add("show");
+      launchConfetti();
+    });
+
+    closeBtn.addEventListener("click", () => {
+      finalOverlay.classList.remove("show");
+      clearOverlayHearts(finalOverlay);
+    });
+
+    /* POPUP LOGIC */
+    const popupOverlay = document.getElementById("popupOverlay");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupText = document.getElementById("popupText");
+    const popupNext = document.getElementById("popupNext");
+    const popupClose = document.getElementById("popupClose");
+
+    const popupMessages = {
+      1: {
+        title: "From Aisha 💖",
+        text: "i love you so much ,you are the number one chef in the world , thank you for every hug 😘 and here is my suprise 🎁",
+        next: false
+      },
+      2: {
+        title: "From Noumaan 🌸",
+        text: "I love mom, you make my favorite food and you are the best momm and you aloways love me all teh time, here is my suprise 🎁",
+        next: false
+      },
+      3: {
+        title: "From Afnaan 💕",
+        text: "Thank you mom for teaching me how me a strong and independent person, you are ther person you teached me how to do dishes, laundry and be independent, here is my suprise 🎁",
+        next: true,
+        next2: {
+          title: "Suprise! 🎉",
+          text: "Of course this is not the only suprise i was one to put all of this togather and i have another suprise for you🙃"
+        }
+      },
+      4: {
+        title: "From All of Us 💐",
+        text: "Thank you, Thank you, Thank you, Thank you, Thank you, Thank you,Thank you,Thank you,Thank you,Thank you,Thank you,Thank you,Thank you,Thank you,Thank you,Thank you q(≧▽≦q)",
+        next: false
+      }
+    };
+
+    function openPopup(id) {
+      const msg = popupMessages[id];
+      popupTitle.textContent = msg.title;
+      popupText.textContent = msg.text;
+      popupNext.style.display = msg.next ? "inline-block" : "none";
+      popupOverlay.style.display = "flex";
+      clearOverlayHearts(popupOverlay);
+      addOverlayHearts(popupOverlay, 15);
+
+      if (msg.next) {
+        popupNext.onclick = () => {
+          popupTitle.textContent = msg.next2.title;
+          popupText.textContent = msg.next2.text;
+          popupNext.style.display = "none";
+        };
+      } else {
+        popupNext.onclick = null;
+      }
+    }
+
+    popupClose.onclick = () => {
+      popupOverlay.style.display = "none";
+      clearOverlayHearts(popupOverlay);
+    };
+
+    document.querySelectorAll(".coupon").forEach(coupon => {
+      coupon.addEventListener("click", () => {
+        const option = coupon.getAttribute("data-option");
+        openPopup(option);
+      });
+    });
+
+    /* 3D parallax on card */
+    window.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateX = (y / rect.height) * -8;
+      const rotateY = (x / rect.width) * 8;
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    window.addEventListener("mouseleave", () => {
+      card.style.transform = "rotateX(0deg) rotateY(0deg)";
+    });
+
+    window.addEventListener("load", () => {
+      placeHearts();
+      updateProgress();
+    });
+  </script>
+</body>
+</html>
